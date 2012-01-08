@@ -1,0 +1,7 @@
+This is a solution to the problem set on slide 44 of the Prolog 2 slides provided by Dr Fariba Sadri as part of MSc Logic and Prolog course
+
+Usage from your Prolog terminal is something like
+Load it:
+?- [thestreet].
+Use it:
+?- street(X).
