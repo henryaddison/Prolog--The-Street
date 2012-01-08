@@ -36,7 +36,12 @@ drinks(Drinks):-
   member(oj,Drinks),
   member(tea,Drinks).
 
-% Can define a house uniquely as ordered 5-tuple [N,P,B,D,C] consisting of an owner's Nationality, a Pet, a cigarette Brand, a Drink and a house Colour
+/* Can define a house uniquely as an ordered 5-tuple [N,P,B,D,C] consisting of:
+N: an owner's Nationality, 
+P: a Pet,
+B: a cigarette Brand, 
+D: a Drink and 
+C: a house Colour */
 % TODO: use functions to make this less reliant on the order
 
 /* House1 is the left neighbour House2 on a street made up of Houses if the list [House1, House2] is a sublist of Houses.
