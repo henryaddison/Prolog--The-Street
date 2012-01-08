@@ -1,3 +1,5 @@
+% Thanks very much to the brilliant "Learn Prolog Now!" book by Patrick Blackburn, Johan Bos and Kristina Striegnitz that Chris McMath introduced me to
+
 prefix(P,L) :- append(P,_,L).
 suffix(S,L) :- append(_,S,L).
 sublist(SubL,L) :- suffix(S,L),prefix(SubL,S).
@@ -11,14 +13,16 @@ drinks(Drinks):-member(water,Drinks),member(coffee,Drinks),member(milk,Drinks),m
 % Can define a house uniquely as ordered 5-tuple [N,P,B,D,C] consisting of an owner's Nationality, a Pet, a cigarette Brand, a Drink and a house Colour
 % TODO: use functions to make this less reliant on the order
 
-% House1 is the left of House2 on a street made up of Houses if the list [House1, House2] is a sublist of Houses
-leftof(House1,House2,Houses):-
+% House1 is the left neighbour House2 on a street made up of Houses if the list [House1, House2] is a sublist of Houses
+% consider a real street numbered 1 to 5 then we can consider Houses to be the list [1, 2, 3, 4, 5]
+% clearly n this example house number 3 is left neighbour of 4, and [3,4] is indeed a sublist, but [3, 5] isn't and we can see that [3, 5] is not a sublist (it goes [3, 4, 5])
+leftneighbour(House1,House2,Houses):-
 	sublist([House1,House2],Houses).
 % House1 is to the right of House2 is equivalent to House2 being to the left of House1
-rightof(House1,House2,Houses):-leftof(House2,House1,Houses).
+rightneighbour(House1,House2,Houses):-leftneighbour(House2,House1,Houses).
 
 % next to just means either House1 is to the left or the right of House2
-nextto(House1,House2,Houses):-(leftof(House1,House2,Houses);rightof(House1,House2,Houses)).
+nextto(House1,House2,Houses):-(leftneighbour(House1,House2,Houses);rightneighbour(House1,House2,Houses)).
 
 street(Houses):-
 	%setup our list of 5 houses
@@ -32,16 +36,15 @@ street(Houses):-
 	member([_,snail,winston,_,_],Houses),
 	member([_,_,kools,_,yellow],Houses),
 	sublist([_,_,[_,_,_,milk,_],_,_],Houses),
+	%first house has norwegian as its owner's nationality
 	Houses=[[norwegian,_,_,_,_]|_],
-	(sublist([[_,_,chesterfields,_,_],[_,fox,_,_,_]],Houses);sublist([[_,fox,_,_,_],[_,_,chesterfields,_,_]],Houses)),
-	(sublist([[_,_,kools,_,_],[_,horse,_,_,_]],Houses);sublist([[_,horse,_,_,_],[_,_,kools,_,_]],Houses)),
+	nextto([_,_,chesterfields,_,_],[_,fox,_,_,_],Houses),
+	nextto([_,_,kools,_,_],[_,horse,_,_,_],Houses),
 	member([_,_,luckystrike,oj,_],Houses),
 	member([japanese,_,parliaments,_,_],Houses),
-	(sublist([[_,_,_,_,blue],[norwegian,_,_,_,_]],Houses);sublist([[norwegian,_,_,_,_],[_,_,_,_,blue]],Houses)),
+	nextto([_,_,_,_,blue],[norwegian,_,_,_,_],Houses),
 	% ensure the houses are distinct (i.e. no two houses match on any of the five attributes
         nationalities([N1,N2,N3,N4,N5]),pets([P1,P2,P3,P4,P5]),colours([C1,C2,C3,C4,C5]),brands([B1,B2,B3,B4,B5]),drinks([D1,D2,D3,D4,D5]).
 	
-    
-    
-
-
+zebra(N):-street(Houses),member([N,zebra,_,_,_], Houses).
+water(N):-street(Houses),member([N,_,_,water,_], Houses).
